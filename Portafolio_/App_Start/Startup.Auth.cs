@@ -1,4 +1,5 @@
 ﻿using System;
+using Fluent.Infrastructure.FluentModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;

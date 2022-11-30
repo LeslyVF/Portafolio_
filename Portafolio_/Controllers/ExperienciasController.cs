@@ -10,107 +10,116 @@ using Portafolio_.Models;
 
 namespace Portafolio_.Controllers
 {
-    public class TipoController : Controller
+    public class ExperienciasController : Controller
     {
-        private portafolioEntities1 db = new portafolioEntities1();
+        private portafolioEntities db = new portafolioEntities();
 
-        // GET: Tipo
+        // GET: Experiencias
         public ActionResult Index()
         {
-            return View(db.Tipo.ToList());
+            var experiencia = db.Experiencia.Include(e => e.AspNetUsers).Include(e => e.Tipo);
+            return View(experiencia.ToList());
         }
 
-        // GET: Tipo/Details/5
+        // GET: Experiencias/Details/5
         public ActionResult Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Tipo tipo = db.Tipo.Find(id);
-            if (tipo == null)
+            Experiencia experiencia = db.Experiencia.Find(id);
+            if (experiencia == null)
             {
                 return HttpNotFound();
             }
-            return View(tipo);
+            return View(experiencia);
         }
 
-        // GET: Tipo/Create
+        // GET: Experiencias/Create
         public ActionResult Create()
         {
+            ViewBag.UsuarioID = new SelectList(db.AspNetUsers, "Id", "Email");
+            ViewBag.Tipo_ID = new SelectList(db.Tipo, "Id", "Descripcion");
             return View();
         }
 
-        // POST: Tipo/Create
+        // POST: Experiencias/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Descripcion")] Tipo tipo)
+        public ActionResult Create([Bind(Include = "id,UsuarioID,Tipo_ID,Nombre,Titulo,Desde,Hasta,Descripcion")] Experiencia experiencia)
         {
             if (ModelState.IsValid)
             {
-                db.Tipo.Add(tipo);
+                db.Experiencia.Add(experiencia);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(tipo);
+            ViewBag.UsuarioID = new SelectList(db.AspNetUsers, "Id", "Email", experiencia.UsuarioID);
+            ViewBag.Tipo_ID = new SelectList(db.Tipo, "Id", "Descripcion", experiencia.Tipo_ID);
+            return View(experiencia);
         }
 
-        // GET: Tipo/Edit/5
+        // GET: Experiencias/Edit/5
         public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Tipo tipo = db.Tipo.Find(id);
-            if (tipo == null)
+            Experiencia experiencia = db.Experiencia.Find(id);
+            if (experiencia == null)
             {
                 return HttpNotFound();
             }
-            return View(tipo);
+            ViewBag.UsuarioID = new SelectList(db.AspNetUsers, "Id", "Email", experiencia.UsuarioID);
+            ViewBag.Tipo_ID = new SelectList(db.Tipo, "Id", "Descripcion", experiencia.Tipo_ID);
+            return View(experiencia);
         }
 
-        // POST: Tipo/Edit/5
+        // POST: Experiencias/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Descripcion")] Tipo tipo)
+        public ActionResult Edit([Bind(Include = "id,UsuarioID,Tipo_ID,Nombre,Titulo,Desde,Hasta,Descripcion")] Experiencia experiencia)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(tipo).State = EntityState.Modified;
+                db.Entry(experiencia).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(tipo);
+            ViewBag.UsuarioID = new SelectList(db.AspNetUsers, "Id", "Email", experiencia.UsuarioID);
+            ViewBag.Tipo_ID = new SelectList(db.Tipo, "Id", "Descripcion", experiencia.Tipo_ID);
+            return View(experiencia);
         }
 
-        // GET: Tipo/Delete/5
+        // GET: Experiencias/Delete/5
         public ActionResult Delete(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Tipo tipo = db.Tipo.Find(id);
-            if (tipo == null)
+            Experiencia experiencia = db.Experiencia.Find(id);
+            if (experiencia == null)
             {
                 return HttpNotFound();
             }
-            return View(tipo);
+            return View(experiencia);
         }
 
-        // POST: Tipo/Delete/5
+        // POST: Experiencias/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Tipo tipo = db.Tipo.Find(id);
-            db.Tipo.Remove(tipo);
+            Experiencia experiencia = db.Experiencia.Find(id);
+            db.Experiencia.Remove(experiencia);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
